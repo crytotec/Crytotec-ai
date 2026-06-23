@@ -13,7 +13,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 exports.app = (0, express_1.default)();
 exports.app.use((0, cors_1.default)({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: ["https://crytotec-ai.vercel.app", "http://localhost:5173"],
     credentials: true
 }));
 exports.app.use(express_1.default.json());
