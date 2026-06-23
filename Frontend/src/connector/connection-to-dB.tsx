@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api/v1";
+const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1";
 
 export const LoginToDB = async (email: string, password: string) => {
   try {
@@ -54,12 +54,11 @@ export const Checkauthuser = async () => {
   return res.data;
 };
 
-// ✅ renamed to sendMessage and accepts chatId
 export const sendMessage = async (message: string, chatId: string | null) => {
   try {
     const res = await axios.post(
       `${BASE_URL}/chat/user`,
-      { message, chatId }, // ✅ chatId sent to backend
+      { message, chatId },
       { withCredentials: true }
     );
     return res.data;
@@ -81,7 +80,6 @@ export const Recent = async () => {
   }
 };
 
-// ✅ fetch messages for a specific chat when clicked in sidebar
 export const getChatMessages = async (chatId: string) => {
   try {
     const res = await axios.get(`${BASE_URL}/chat/${chatId}`, {
@@ -93,7 +91,6 @@ export const getChatMessages = async (chatId: string) => {
     throw error;
   }
 };
-
 
 export const deleteChatById = async (chatId: string) => {
   try {

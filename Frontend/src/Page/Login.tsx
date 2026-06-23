@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
-  the auth
+  // the auth
   const { login } = useAuth();
   const navigate = useNavigate();
 
