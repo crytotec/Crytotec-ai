@@ -29,7 +29,7 @@ function Login() {
       toast.success("Login successful 🎉", { id: toastId });
 
       navigate("/chat");
-    } catch (error) {
+    } catch (error: any) {
       console.log("LOGIN ERROR:", error);
 
       const message =
@@ -45,26 +45,18 @@ function Login() {
 
   return (
     <div className="w-full min-h-screen flex items-center justify-center bg-[#070A1A]">
-
       <div className="w-full max-w-5xl flex rounded-lg overflow-hidden shadow-lg bg-blue-800">
 
         {/* IMAGE SIDE */}
         <div className="hidden sm:flex w-1/2 items-center justify-center">
-          <img
-            src={airbot}
-            alt="AI Robot"
-            className="w-full h-full object-cover"
-          />
+          <img src={airbot} alt="AI Robot" className="w-full h-full object-cover" />
         </div>
 
         {/* FORM SIDE */}
         <div className="w-full md:w-1/2 bg-blue-900 p-8 flex flex-col justify-center">
-
           <form onSubmit={handleLogin} className="w-full">
 
-            <h2 className="text-xl text-white font-bold mb-6">
-              Sign in
-            </h2>
+            <h2 className="text-xl text-white font-bold mb-6">Sign in</h2>
 
             {/* EMAIL */}
             <div className="mb-4">
@@ -95,9 +87,7 @@ function Login() {
               type="submit"
               disabled={loading}
               className={`w-full py-2 rounded-md text-white transition ${
-                loading
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-700 hover:bg-blue-600"
+                loading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-700 hover:bg-blue-600"
               }`}
             >
               {loading ? "Please wait..." : "Login"}
@@ -105,18 +95,14 @@ function Login() {
 
             {/* LINK */}
             <p className="text-sm text-yellow-300 mt-4">
-              Don’t have an account?{" "}
-              <Link to="/signup" className="underline">
-                Create one
-              </Link>
+              Don't have an account?{" "}
+              <Link to="/signup" className="underline">Create one</Link>
             </p>
 
           </form>
-
         </div>
 
       </div>
-
     </div>
   );
 }
