@@ -13,7 +13,18 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 exports.app = (0, express_1.default)();
 exports.app.use((0, cors_1.default)({
-    origin: ["https://crytotec-ai.vercel.app", "http://localhost:5173"],
+    origin: (origin, callback) => {
+        const allowed = [
+            "https://crytotec-ai.vercel.app",
+            "http://localhost:5173"
+        ];
+        if (!origin || allowed.includes(origin) || origin.endsWith(".vercel.app")) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
 }));
 exports.app.use(express_1.default.json());
