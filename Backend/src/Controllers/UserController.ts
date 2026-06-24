@@ -4,9 +4,6 @@ import User from "../Models/userModel";
 import { createToken } from "../utilis/Token-maniger";
 import { Token_Name } from "../utilis/TokenName";
 
-/**
- * TEST CONTROLLER
- */
 export const AllUserController = (
   req: Request,
   res: Response,
@@ -25,9 +22,6 @@ export const AllUserController = (
   });
 };
 
-/**
- * SIGNUP CONTROLLER
- */
 export const signupcontroller = async (
   req: Request,
   res: Response,
@@ -61,17 +55,15 @@ export const signupcontroller = async (
     const expires = new Date();
     expires.setDate(expires.getDate() + 7);
 
-    const token = createToken(
-      newUser._id.toString(),
-      newUser.email,
-      "7d"
-    );
+    const token = createToken(newUser._id.toString(), newUser.email, "7d");
 
     res.cookie(Token_Name, token, {
       path: "/",
       expires,
       httpOnly: true,
       signed: true,
+      secure: true,       // ← added
+      sameSite: "none",   // ← added
     });
 
     return res.status(201).json({
@@ -84,16 +76,12 @@ export const signupcontroller = async (
     });
   } catch (error) {
     console.log(error);
-
     return res.status(500).json({
       message: "Server Error",
     });
   }
 };
 
-/**
- * LOGIN CONTROLLER
- */
 export const logincontroller = async (req: Request, res: Response) => {
   try {
     console.log("🔥 LOGIN CONTROLLER STARTED");
@@ -145,6 +133,8 @@ export const logincontroller = async (req: Request, res: Response) => {
       expires,
       httpOnly: true,
       signed: true,
+      secure: true,       // ← added
+      sameSite: "none",   // ← added
     });
 
     console.log("TOKEN CREATED:", token);
@@ -159,19 +149,14 @@ export const logincontroller = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log("🔥 LOGIN ERROR CAUGHT:", err);
-
     return res.status(500).json({
       message: "Server crashed",
     });
   }
 };
 
-/**
- * VERIFY USER (FIXED - NO res.locals BUG)
- */
 export const verifyUser = async (req: Request, res: Response) => {
   try {
-    // ✅ FIX: ONLY USE req.user (NOT res.locals)
     const userId = req.user?.id;
 
     if (!userId) {
@@ -198,16 +183,12 @@ export const verifyUser = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.log("🔥 VERIFY ERROR:", err);
-
     return res.status(500).json({
       message: "Server crashed",
     });
   }
 };
 
-/**
- * LOGOUT CONTROLLER
- */
 export const logoutcontroller = (
   req: Request,
   res: Response,
@@ -215,6 +196,8 @@ export const logoutcontroller = (
 ) => {
   res.clearCookie(Token_Name, {
     path: "/",
+    secure: true,       // ← added
+    sameSite: "none",   // ← added
   });
 
   return res.status(200).json({
