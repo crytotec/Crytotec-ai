@@ -14,6 +14,7 @@ const Chat = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [lastMessage, setLastMessage] = useState<string>("");
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
 
   const { selectedChat, getRecent, newChatTrigger } = useRecent();
@@ -74,10 +75,19 @@ const Chat = () => {
 
   const handleRetry = () => {
     if (lastMessage) {
-      // remove last failed user message before retrying
       setMessages((prev) => prev.slice(0, -1));
       setError(null);
       sendMsg(lastMessage);
+    }
+  };
+
+  const handleCopy = async (text: string, index: number) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedIndex(index);
+      setTimeout(() => setCopiedIndex(null), 2000);
+    } catch {
+      console.log("Copy failed");
     }
   };
 
@@ -85,10 +95,10 @@ const Chat = () => {
     <div className="flex flex-col h-screen w-full bg-gray-100">
 
       {/* CHAT AREA */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col justify-start gap-3">
 
         {messages.length === 0 && !loading && (
-          <div className="flex-1 flex items-center justify-center text-gray-400 text-sm text-center">
+          <div className="flex items-center justify-center text-gray-600 text-sm text-center py-10">
             Send a message to start chatting
           </div>
         )}
@@ -98,21 +108,34 @@ const Chat = () => {
             key={index}
             className={`flex w-full ${item.role === "user" ? "justify-end" : "justify-start"}`}
           >
-            <div
-              className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed break-words ${
-                item.role === "user"
-                  ? "bg-blue-500 text-white rounded-br-sm max-w-[80%]"
-                  : "bg-white text-gray-900 shadow-sm border border-gray-100 rounded-bl-sm max-w-[85%]"
-              }`}
-            >
-              <ReactMarkdown>{item.message}</ReactMarkdown>
-            </div>
+            {item.role === "ai" ? (
+              <div className="group relative max-w-[85%]">
+                <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm text-sm leading-relaxed break-words bg-white text-gray-600 shadow-sm border border-gray-100">
+                  <ReactMarkdown>{item.message}</ReactMarkdown>
+                </div>
+                {/* Copy button - shows on hover */}
+                <button
+                  onClick={() => handleCopy(item.message, index)}
+                  className="absolute -bottom-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 bg-white border border-gray-200 rounded-md px-2 py-0.5 shadow-sm"
+                >
+                  {copiedIndex === index ? (
+                    <>✓ Copied</>
+                  ) : (
+                    <>⧉ Copy</>
+                  )}
+                </button>
+              </div>
+            ) : (
+              <div className="px-4 py-2.5 rounded-2xl rounded-br-sm text-sm leading-relaxed break-words bg-blue-500 text-white max-w-[80%]">
+                <ReactMarkdown>{item.message}</ReactMarkdown>
+              </div>
+            )}
           </div>
         ))}
 
         {loading && (
           <div className="flex justify-start">
-            <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm bg-white shadow-sm border border-gray-100 text-sm text-gray-400 animate-pulse">
+            <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm bg-white shadow-sm border border-gray-100 text-sm text-gray-600 animate-pulse">
               Crytotec AI is thinking…
             </div>
           </div>
