@@ -11,7 +11,17 @@ dotenv.config()
 export const app = express()
 
 app.use(cors({
-  origin: ["https://crytotec-ai.vercel.app", "http://localhost:5173"],
+  origin: (origin, callback) => {
+    const allowed = [
+      "https://crytotec-ai.vercel.app",
+      "http://localhost:5173"
+    ];
+    if (!origin || allowed.includes(origin) || origin.endsWith(".vercel.app")) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 app.use(express.json())
