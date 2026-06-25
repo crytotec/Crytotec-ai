@@ -93,7 +93,7 @@ const Chat = () => {
 
   return (
     // ✅ FIXED: h-screen → h-full
-    <div className="flex flex-col h-full w-full bg-gray-100">
+    <div className="flex flex-col h-screen w-full bg-gray-100">
 
       {/* CHAT AREA */}
       <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col justify-start gap-3 min-h-0">
