@@ -95,7 +95,7 @@ const Chat = () => {
     <div className="flex flex-col h-screen w-full bg-gray-100">
 
       {/* CHAT AREA */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col justify-start gap-3">
+      <div className="flex-1 overflow-y-auto mt-20  px-4 py-4 flex flex-col justify-start gap-3">
 
         {messages.length === 0 && !loading && (
           <div className="flex items-center justify-center text-gray-600 text-sm text-center py-10">
