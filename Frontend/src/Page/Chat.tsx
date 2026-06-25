@@ -92,10 +92,11 @@ const Chat = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-full bg-gray-100">
+    // ✅ FIXED: h-screen → h-full
+    <div className="flex flex-col h-full w-full bg-gray-100">
 
       {/* CHAT AREA */}
-      <div className="flex-1 overflow-y-auto pt-20  px-4 py-4 flex flex-col justify-start gap-3">
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col justify-start gap-3 min-h-0">
 
         {messages.length === 0 && !loading && (
           <div className="flex items-center justify-center text-gray-600 text-sm text-center py-10">
@@ -113,16 +114,11 @@ const Chat = () => {
                 <div className="px-4 py-2.5 rounded-2xl rounded-bl-sm text-sm leading-relaxed break-words bg-white text-gray-600 shadow-sm border border-gray-100">
                   <ReactMarkdown>{item.message}</ReactMarkdown>
                 </div>
-                {/* Copy button - shows on hover */}
                 <button
                   onClick={() => handleCopy(item.message, index)}
                   className="absolute -bottom-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 bg-white border border-gray-200 rounded-md px-2 py-0.5 shadow-sm"
                 >
-                  {copiedIndex === index ? (
-                    <>✓ Copied</>
-                  ) : (
-                    <>⧉ Copy</>
-                  )}
+                  {copiedIndex === index ? <>✓ Copied</> : <>⧉ Copy</>}
                 </button>
               </div>
             ) : (

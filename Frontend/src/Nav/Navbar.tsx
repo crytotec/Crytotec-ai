@@ -18,7 +18,7 @@ function Navbar() {
   }, []);
 
   const handleNewChat = () => {
-    resetChat(); // ✅ clears everything
+    resetChat();
     setIsNavOpen(false);
   };
 
@@ -42,7 +42,8 @@ function Navbar() {
   };
 
   return (
-    <div className="relative w-full p-4 sm:hidden bg-white border-b">
+    // ✅ FIXED: sm:hidden → md:hidden to match sidebar breakpoint
+    <div className="relative w-full p-4 md:hidden bg-white border-b">
 
       {/* TOP BAR */}
       <div className="flex w-full justify-between items-center">
@@ -74,7 +75,6 @@ function Navbar() {
 
           <div className="fixed top-0 left-0 h-screen w-64 bg-[#111827] text-white shadow-lg z-50 flex flex-col p-4">
 
-            {/* HEADER */}
             <div className="flex items-center justify-between mb-4">
               <p className="font-bold text-lg">Crytotec AI</p>
               <button
@@ -85,7 +85,6 @@ function Navbar() {
               </button>
             </div>
 
-            {/* NEW CHAT */}
             <button
               onClick={handleNewChat}
               className="bg-[#1a1a9f] hover:bg-blue-500 rounded-md p-2 text-sm transition-colors mb-4"
@@ -93,8 +92,7 @@ function Navbar() {
               + New Chat
             </button>
 
-            {/* RECENT CHATS */}
-            <div className="flex-1 overflow-y-auto space-y-1">
+            <div className="flex-1 overflow-y-auto space-y-1 chat-scroll">
               <p className="text-xs text-gray-400 uppercase tracking-wide px-2 mb-2">
                 Recent
               </p>
@@ -113,7 +111,6 @@ function Navbar() {
                   <span className="truncate flex-1">
                     {chat.title || "New Chat"}
                   </span>
-
                   <button
                     onClick={(e) => handleDelete(e, chat.chatId)}
                     disabled={deletingId === chat.chatId}
@@ -130,7 +127,6 @@ function Navbar() {
               ))}
             </div>
 
-            {/* AUTH */}
             <div className="border-t border-gray-700 pt-3 mt-2">
               {user?.isLogged ? (
                 <Link

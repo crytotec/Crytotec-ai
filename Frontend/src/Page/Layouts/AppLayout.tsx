@@ -11,7 +11,7 @@ import { deleteChatById } from "../../connector/connection-to-dB";
 
 function AppLayout() {
   const [open, setOpen] = useState(true);
-  const [recentOpen, setRecentOpen] = useState(false); // ✅ controls recent popout
+  const [recentOpen, setRecentOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const { recent, getRecent, setSelectedChat, resetChat } = useRecent();
@@ -31,11 +31,13 @@ function AppLayout() {
   };
 
   return (
-    <div className="h-screen flex relative">
+    // ✅ FIXED: added overflow-hidden
+    <div className="h-screen flex relative overflow-hidden">
 
       {/* SIDEBAR */}
+      {/* ✅ FIXED: added flex-shrink-0 */}
       <div
-        className={`hidden md:flex bg-[#0b0b8b] text-white transition-all duration-300
+        className={`hidden md:flex flex-shrink-0 bg-[#0b0b8b] text-white transition-all duration-300
         ${open ? "w-64" : "w-0 overflow-hidden"}`}
       >
         <Sidebar open={open} setOpen={setOpen} />
@@ -43,11 +45,11 @@ function AppLayout() {
 
       {/* COLLAPSED ICON BAR */}
       {!open && (
-        <div className="hidden md:flex absolute h-full bg-[#0b0b8b] p-4 flex-col items-center gap-4 z-30">
-          
+        // ✅ FIXED: added explicit w-14
+        <div className="hidden md:flex absolute h-full bg-[#0b0b8b] p-4 flex-col items-center gap-4 z-30 w-14">
+
           <img src={openai} className="invert w-6 h-6" />
 
-          {/* OPEN SIDEBAR BUTTON */}
           <button
             onClick={() => { setOpen(true); setRecentOpen(false); }}
             className="group relative text-white p-2 rounded-md hover:bg-blue-700"
@@ -58,9 +60,8 @@ function AppLayout() {
             </span>
           </button>
 
-          {/* RECENT ICON BUTTON */}
           <button
-            onClick={() => setRecentOpen((prev) => !prev)} // ✅ toggles popout
+            onClick={() => setRecentOpen((prev) => !prev)}
             className="group relative text-white p-2 rounded-md hover:bg-blue-700"
           >
             <IoChatbubbleOutline className="w-6 h-6 cursor-pointer" />
@@ -75,16 +76,14 @@ function AppLayout() {
       {/* RECENT POPOUT DRAWER */}
       {!open && recentOpen && (
         <>
-          {/* BACKDROP */}
           <div
             onClick={() => setRecentOpen(false)}
             className="fixed inset-0 bg-black/20 z-20"
           />
 
-          {/* DRAWER */}
-          <div className="fixed top-0 left-16 h-full w-60 bg-[#111827] text-white z-30 flex flex-col p-4 shadow-xl">
-            
-            {/* HEADER */}
+          {/* ✅ FIXED: left-16 → left-14 to match icon bar width */}
+          <div className="fixed top-0 left-14 h-full w-60 bg-[#111827] text-white z-30 flex flex-col p-4 shadow-xl">
+
             <div className="flex items-center justify-between mb-4">
               <p className="text-xs text-gray-400 uppercase tracking-wide">Recent</p>
               <button
@@ -95,7 +94,6 @@ function AppLayout() {
               </button>
             </div>
 
-            {/* NEW CHAT */}
             <button
               onClick={() => { resetChat(); setRecentOpen(false); }}
               className="bg-[#1a1a9f] hover:bg-blue-500 rounded-md p-2 text-sm transition-colors mb-4"
@@ -103,7 +101,6 @@ function AppLayout() {
               + New Chat
             </button>
 
-            {/* CHAT LIST */}
             <div className="flex-1 overflow-y-auto space-y-1 chat-scroll">
               {recent && recent.length === 0 && (
                 <p className="text-xs text-gray-500 px-2">No recent chats yet</p>
@@ -119,7 +116,6 @@ function AppLayout() {
                   <span className="truncate flex-1">
                     {chat.title || "New Chat"}
                   </span>
-
                   <button
                     onClick={(e) => handleDelete(e, chat.chatId)}
                     disabled={deletingId === chat.chatId}
@@ -141,7 +137,8 @@ function AppLayout() {
       )}
 
       {/* MAIN CONTENT */}
-      <div className="flex-1 flex flex-col">
+      {/* ✅ FIXED: md:ml-14 when collapsed, min-h-0 min-w-0 to prevent overflow */}
+      <div className={`flex-1 flex flex-col min-h-0 min-w-0 ${!open ? "md:ml-14" : ""}`}>
         <Navbar />
         <div className="flex-1 overflow-hidden">
           <Outlet />
